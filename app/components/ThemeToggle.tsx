@@ -15,7 +15,7 @@ function ThemeToggle() {
 return (
     <Switch
         defaultSelected={theme === "dark"}
-        size="lg"
+        size="md"
         thumbIcon={({ isSelected }) => (
             isSelected ? <MoonIcon  /> : <SunIcon />
         )}

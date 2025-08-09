@@ -28,21 +28,21 @@ const NavbarMain: React.FC<NavbarProps> = ({ mode = "" }) => {
       {/* Navigation Links - Always visible, centered */}
       <div className="flex-1 flex justify-center items-center">
         <div className="flex flex-row space-x-3 sm:space-x-4 md:space-x-6 lg:space-x-8 items-center">
-          <Link href="/register" className="headerButton !text-muthootRed text-center">
+          <Link href="/register" className="headerButton font-sans !text-muthootRed text-center relative transition-all duration-300 hover:drop-shadow-md hover:after:w-full after:content-[''] after:absolute after:w-0 after:h-px after:bg-muthootRed after:left-0 after:-bottom-1 after:transition-all after:duration-300">
             Register
           </Link>
-          <Link href="/login" className={`headerButton ${mode === "dark" ? "text-white" : ""} ${mode === "light" ? "text-black" : ""} text-center`}>
+          <Link href="/login" className={`headerButton font-sans ${mode === "dark" ? "text-white" : ""} ${mode === "light" ? "text-black" : ""} text-center relative transition-all duration-300 hover:drop-shadow-md hover:after:w-full after:content-[''] after:absolute after:w-0 after:h-px after:bg-current after:left-0 after:-bottom-1 after:transition-all after:duration-300`}>
             Login
           </Link>
           {/* About link hidden on small screens */}
-          <Link href="/about" className={`headerButton ${mode === "dark" ? "text-white" : ""} ${mode === "light" ? "text-black" : ""} hidden md:block text-center`}>
+          <Link href="/about" className={`headerButton font-sans ${mode === "dark" ? "text-white" : ""} ${mode === "light" ? "text-black" : ""} hidden md:block text-center relative transition-all duration-300 hover:drop-shadow-md hover:after:w-full after:content-[''] after:absolute after:w-0 after:h-px after:bg-current after:left-0 after:-bottom-1 after:transition-all after:duration-300`}>
             About
           </Link>
         </div>
       </div>
 
       {/* Theme toggle */}
-      <div className="flex-shrink-0 sm:w-[120px] flex justify-end items-center">
+      <div className="flex-shrink-0 sm:w-[100px] flex justify-end items-center">
         <ThemeToggle />
       </div>
     </div>
