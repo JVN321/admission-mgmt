@@ -195,6 +195,7 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
         branch: student["Branch Details"]?.Branch === "AIDS" ? "AI & DS" : student["Branch Details"]?.Branch || "CSE",
         transactionId: student["Payment"]?.["Transaction Number"] || "Not provided",
         applyingYear: student["Student Details"]?.["Academic Year"] || "Not provided",
+        quota: student["Student Details"]?.["Quota"] || "NRI",
       }
     : {
         // Your default mock data
@@ -216,6 +217,7 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
         relation: "Guardian",
         branch: "Computer Science and Engineering",
         transactionId: "TXN_9876543210",
+        quota: "NRI",
       };
 
   return (
@@ -230,7 +232,7 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
           </View>
         </View>
         <View style={styles.header}>
-          <Text style={styles.subtitle}>Application for B-Tech NRI Quota <Text style={styles.subtitle}>{studentData.applyingYear}</Text></Text>
+          <Text style={styles.subtitle}>Application for B-Tech {studentData.quota} Quota <Text style={styles.subtitle}>{studentData.applyingYear}</Text></Text>
         </View>
 
         {/* Photos Section */}
@@ -429,7 +431,7 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
           <Text style={styles.secondPageText}>
             <Text style={{ fontWeight: "bold" }}>GROUP A</Text>
             {"\n"}I am aware about the criteria followed by &quot;Muthoot
-            Institute of Technology and Science&quot;, for the B-Tech NRI Quota
+            Institute of Technology and Science&quot;, for the B-Tech {studentData.quota} Quota
             admission for the year {studentData.applyingYear}, such that my ward
             has to attain 80% Marks for Mathematics individually and 80% put
             together in Physics, Chemistry & Mathematics, in the 12th standard,
@@ -445,7 +447,7 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
           <Text style={styles.secondPageText}>
             <Text style={{ fontWeight: "bold" }}>GROUP B</Text>
             {"\n"}I am aware about the criteria followed by &quot;Muthoot
-            Institute of Technology and Science&quot;, for the B-Tech NRI Quota
+            Institute of Technology and Science&quot;, for the B-Tech {studentData.quota} Quota
             admission for the year {studentData.applyingYear}, such that my ward
             has to attain 75% Marks for Mathematics individually and 75% put
             together in Physics, Chemistry & Mathematics, in the 12th standard,
@@ -462,13 +464,13 @@ const StudentPDF = ({ student }: StudentPDFProps) => {
             <Text style={{ fontWeight: "bold" }}>EXIT OPTION</Text>
             {"\n"}1. A student can opt to{" "}
             <Text style={{ backgroundColor: "yellow" }}> EXIT </Text>
-            from NRI quota before 5 days, after the publication of{" "}
+            from {studentData.quota} quota before 5 days, after the publication of{" "}
             <Text style={{ backgroundColor: "yellow" }}>
               KEAM {studentData.applyingYear} SCORE/answer key
             </Text>{" "}
             and will be reimbursed with the entire amount after deducting Rs
             1000 as processing fee. However, a student will be automatically
-            considered for MITS Management Merit Quota from NRI quota if he
+            considered for MITS Management Merit Quota from {studentData.quota} quota if he
             desires so and has to{" "}
             <Text style={{ backgroundColor: "yellow" }}>freeze</Text> the
             registration in MITS by sending an email to admissions@mgits.ac.in.{" "}
