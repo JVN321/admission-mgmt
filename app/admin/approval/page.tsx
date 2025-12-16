@@ -23,7 +23,7 @@ import {
 
 import { Save, Search } from "lucide-react";
 import NavbarAdmin from "../../components/NavbarAdmin";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   getStructuredUsersByYear,
   updateOnboardingStatus,
@@ -58,7 +58,7 @@ export default function ApprovalDashboard() {
   // Fetch available academic years on component mount
   const { selectedYear } = useAdminStore();
 
-  // Fetch users when year or page changes
+  // Fetch users when year, page, search, or sort changes
   useEffect(() => {
     async function fetchUsers() {
       setLoading(true);
@@ -75,7 +75,9 @@ export default function ApprovalDashboard() {
         const response = await getStructuredUsersByYear(
           selectedYear.toString(),
           currentPage,
-          8
+          8,
+          searchTerm,
+          sortBy
         );
 
         if (response.success) {
@@ -96,7 +98,7 @@ export default function ApprovalDashboard() {
     }
 
     fetchUsers();
-  }, [selectedYear, currentPage]);
+  }, [selectedYear, currentPage, searchTerm, sortBy]);
 
   // Function to handle toggling onboarding permission (now adds to pending changes)
   const handleTogglePermission = async (
@@ -173,40 +175,8 @@ export default function ApprovalDashboard() {
   // Check if there are any pending changes
   const hasPendingChanges = Object.keys(pendingChanges).length > 0;
 
-  // Filter and sort users based on search term and sort option
-  const filteredAndSortedUsers = useMemo(() => {
-    if (!users) return [];
-
-    // Filter by search term
-    const filtered = users.filter((user) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        user["Student Details"].Name.toLowerCase().includes(searchLower) ||
-        user["Student Details"].Email.toLowerCase().includes(searchLower) ||
-        user["Student Details"].Phone.toLowerCase().includes(searchLower) ||
-        user.applicationNo.toLowerCase().includes(searchLower)
-      );
-    });
-
-    // Sort based on selected sort option
-    const sorted = [...filtered];
-    switch (sortBy) {
-      case "newest":
-        return sorted.sort((a, b) =>
-          b.applicationNo.localeCompare(a.applicationNo)
-        );
-      case "oldest":
-        return sorted.sort((a, b) =>
-          a.applicationNo.localeCompare(b.applicationNo)
-        );
-      case "name":
-        return sorted.sort((a, b) =>
-          a["Student Details"].Name.localeCompare(b["Student Details"].Name)
-        );
-      default:
-        return sorted;
-    }
-  }, [users, searchTerm, sortBy]);
+  // Users are already filtered and sorted on the server
+  const filteredAndSortedUsers = users;
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -258,7 +228,10 @@ export default function ApprovalDashboard() {
                     <Search className="text-default-400" size={18} />
                   }
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page on search
+                  }}
                 />
               </div>
               <div className="flex items-center gap-2">

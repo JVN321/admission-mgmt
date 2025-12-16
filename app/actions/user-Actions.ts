@@ -145,7 +145,13 @@ export async function conformSeat(userId: string, quota: string, branchName: str
 
 }
 
-export async function getStructuredUsersByYear(year: string, page: number = 1, limit: number = 10) {
+export async function getStructuredUsersByYear(
+    year: string, 
+    page: number = 1, 
+    limit: number = 10,
+    searchTerm: string = "",
+    sortBy: string = "newest"
+) {
     try {
         // Validate input
         if (!year) {
@@ -161,21 +167,48 @@ export async function getStructuredUsersByYear(year: string, page: number = 1, l
         // Calculate pagination values
         const skip = (page - 1) * limit;
 
-        // Get total count for pagination
+        // Build where clause with search functionality
+        const whereClause: { applyingYear: string; OR?: Array<Record<string, unknown>> } = {
+            applyingYear: year
+        };
+
+        // Add search filter if searchTerm is provided
+        if (searchTerm && searchTerm.trim() !== "") {
+            whereClause.OR = [
+                { firstName: { contains: searchTerm, mode: 'insensitive' } },
+                { middleName: { contains: searchTerm, mode: 'insensitive' } },
+                { lastName: { contains: searchTerm, mode: 'insensitive' } },
+                { email: { contains: searchTerm, mode: 'insensitive' } },
+                { mobileNumber: { contains: searchTerm, mode: 'insensitive' } },
+                { applicationNo: { contains: searchTerm, mode: 'insensitive' } }
+            ];
+        }
+
+        // Get total count for pagination with search applied
         const totalUsers = await prisma.user.count({
-            where: {
-                applyingYear: year
-            }
+            where: whereClause
         });
 
-        // Get users for the specified year
+        // Determine sort order
+        let orderBy: { createdAt?: 'asc' | 'desc'; firstName?: 'asc' | 'desc' } = { createdAt: 'desc' }; // default: newest
+        
+        switch (sortBy) {
+            case "oldest":
+                orderBy = { createdAt: 'asc' };
+                break;
+            case "name":
+                orderBy = { firstName: 'asc' };
+                break;
+            case "newest":
+            default:
+                orderBy = { createdAt: 'desc' };
+                break;
+        }
+
+        // Get users for the specified year with search and sort
         const users = await prisma.user.findMany({
-            where: {
-                applyingYear: year
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
+            where: whereClause,
+            orderBy: orderBy,
             skip: skip,
             take: limit
         });

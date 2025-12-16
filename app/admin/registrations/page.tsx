@@ -29,7 +29,7 @@ import {
 
 import { Save,Download, Search, Trash2, Printer, Eye } from "lucide-react";
 import NavbarAdmin from "../../components/NavbarAdmin";
-import { useState, useMemo, useEffect} from "react";
+import { useState, useEffect} from "react";
 import StudentDetails from "../../components/StudentDetails";
 import { usePrintPDF } from "../../hooks/usePrintPDF";
 import { getStructuredUsersByYear,updateOnboardingStatus, deleteStudentById } from "../../actions/user-Actions";
@@ -91,7 +91,13 @@ export default function RegistrationDashboard()
           return;
         }
 
-        const response = await getStructuredUsersByYear(selectedYear.toString(), currentPage, 8);
+        const response = await getStructuredUsersByYear(
+          selectedYear.toString(), 
+          currentPage, 
+          8,
+          searchTerm,
+          sortBy
+        );
 
         if (response.success) {
           setUsers(response.users);
@@ -111,7 +117,7 @@ export default function RegistrationDashboard()
     }
 
     fetchUsers();
-  }, [selectedYear, currentPage]);
+  }, [selectedYear, currentPage, searchTerm, sortBy]);
 
   // Function to handle toggling onboarding permission (now adds to pending changes)
   const handleTogglePermission = async (student: StructuredUserData, newStatus: boolean) => {
@@ -240,35 +246,8 @@ export default function RegistrationDashboard()
     await generatePDF(student);
   };
   
-  // Filter and sort users based on search term and sort option
-  const filteredAndSortedUsers = useMemo(() => {
-    if (!users) return [];
-
-    // Filter by search term
-    const filtered = users.filter((user) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        user["Student Details"].Name.toLowerCase().includes(searchLower) ||
-        user["Student Details"].Email.toLowerCase().includes(searchLower) ||
-        user["Student Details"].Phone.toLowerCase().includes(searchLower) ||
-        user.applicationNo.toLowerCase().includes(searchLower)
-      );
-    });
-
-    // Sort based on selected sort option
-    const sorted = [...filtered];
-    switch (sortBy) {
-      case "newest":
-        // Assuming newer users have more recent IDs
-        return sorted.sort((a, b) => b.applicationNo.localeCompare(a.applicationNo));
-      case "oldest":
-        return sorted.sort((a, b) => a.applicationNo.localeCompare(b.applicationNo));
-      case "name":
-        return sorted.sort((a, b) => a["Student Details"].Name.localeCompare(b["Student Details"].Name));
-      default:
-        return sorted;
-    }
-  }, [users, searchTerm, sortBy]);
+  // Users are already filtered and sorted on the server
+  const filteredAndSortedUsers = users;
 
   // Get registration status based on creation date
   function getRegistrationStatus(user: StructuredUserData) {
@@ -323,7 +302,10 @@ export default function RegistrationDashboard()
                   placeholder="Search by name, ID, or email..."
                   startContent={<Search className="text-default-400" size={18} />}
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page on search
+                  }}
                 />
               </div>
               <div className="flex items-center gap-2">
