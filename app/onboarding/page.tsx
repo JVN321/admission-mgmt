@@ -234,8 +234,8 @@ export default function OnBoarding() {
       <div>
         <div className="flex flex-col items-center min-h-screen bg-background pb-4 pt-4">
           <div className="w-full">{renderStepContent()}</div>
-          <div className="flex flex-row items-center justify-between w-full px-10 pb-10 md:max-w-[70%]">
-            <Contact className="!relative" />
+          <div className="flex flex-col md:flex-row-reverse items-center justify-between w-full px-10 pb-10 md:max-w-[70%] ">
+            
             {!seatConfirmed && (
               <div className="flex space-x-4 bg-textBoxBackground items-center shadow-xl p-4 rounded-xl">
                 <Button
@@ -262,6 +262,7 @@ export default function OnBoarding() {
                 }
               </div>
             )}
+            <Contact className="!relative" />
           </div>
         </div>
       </div>
