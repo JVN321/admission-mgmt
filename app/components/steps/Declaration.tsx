@@ -227,7 +227,7 @@ export default function Declaration() {
     fetchData();
   }, [session, fetchUserData]);
 
-  const year = "2024";
+  const year = academic.toString();
   return (
     <div className="flex flex-col items-center justify-center w-full p-3">
       <div className="bg-textBoxBackground relative shadow-xl rounded-3xl p-4 sm:p-8 w-full max-w-[100%] sm:max-w-4xl ">
