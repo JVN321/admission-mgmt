@@ -13,13 +13,13 @@ const NavbarMain: React.FC<NavbarProps> = ({ mode = "" }) => {
   return (
     <div className="relative z-10 bg-white bg-opacity-[15%] shadow max-w-[95%] w-full h-auto min-h-[60px] mt-5 mx-auto rounded-3xl flex items-center px-3 sm:px-6 py-2 backdrop-blur-sm">
       {/* Logo */}
-      <div className="flex-shrink-0 w-[100px] sm:w-[150px]">
+      <div className="flex-shrink-0 w-[90px] sm:w-[100px]">
         <Link href="/" passHref>
           <Image 
             src="/MITS.png" 
             alt="Muthoot Logo" 
-            width={120} 
-            height={40} 
+            width={346} 
+            height={164} 
             className="cursor-pointer object-contain h-auto w-full" 
           />
         </Link>
