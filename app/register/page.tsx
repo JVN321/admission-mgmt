@@ -179,6 +179,7 @@ export default function Register() {
                 label={"Aadhar No."}
                 autoComplete="off"
                 type={"number"}
+                required={true}
                 onChange={handleChange}
               />
             </div>
